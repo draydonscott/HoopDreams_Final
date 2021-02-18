@@ -1,9 +1,11 @@
 package com.example.hoopdreams;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 import android.content.Context;
 import android.content.ContentValues;
+import android.util.Log;
 //import android.support.annotation.Nullable;
 
 public class DataBaseHelper extends SQLiteOpenHelper{
@@ -30,6 +32,8 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 
     }
 
+
+
     public boolean addOne(String Time, int ShotsMade, int ShotsAttempted, String date, String SessionID){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -47,5 +51,19 @@ public class DataBaseHelper extends SQLiteOpenHelper{
         else{
             return true;
         }
+    }
+
+    public Cursor getData(){
+         String TAG="Get Items";
+        Log.d(TAG, "Enter get Items");
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.query(DataBaseHelper.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                DataBaseHelper.COLUMN_SESSION_DATE+" DESC");
+        return c;
     }
 }

@@ -2,9 +2,9 @@ package com.example.hoopdreams;
 
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +15,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.hoopdreams.ui.main.ExperienceItem;
 import com.example.hoopdreams.ui.main.ExperienceTracker;
 import com.example.hoopdreams.ui.main.HistoryAdapter;
+import com.example.hoopdreams.DataBaseHelper;
 
 public class Fragment3 extends Fragment {
+    private static String TAG="FRAGMENT3";
     ProgressBar experienceBar;
     ExperienceItem item;
     TextView currentLeveltxt;
@@ -29,25 +34,9 @@ public class Fragment3 extends Fragment {
     TextView expNeededtxt;
     private Handler handler = new Handler();
 
-    private Cursor getAllItems() {
-        return database.query(
-                DataBaseHelper.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                DataBaseHelper.COLUMN_SESSION_DATE + "DESC"
-        );
-    }
-
-    //Below is for RecyclerView
-    private SQLiteDatabase database;
-    private HistoryAdapter adapter;
 
     @Nullable
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment3_layout, container, false);
         item = ExperienceTracker.determineBadge();
@@ -58,11 +47,13 @@ public class Fragment3 extends Fragment {
         expNeededtxt.setText("Exp to level up" + item.ExpNeeded);
         expRemtxt.setText("Progress to next level:" + item.ExpRemaining + " %");
         currentLeveltxt.setText(item.Rank);
-
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(view.getContext());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(new HistoryAdapter(view.getContext(),getAllItems()));
+        Cursor c = dataBaseHelper.getData();
+        recyclerView.setAdapter(new HistoryAdapter(view.getContext(),c));
 
 
         new Thread(new Runnable() {
@@ -72,9 +63,7 @@ public class Fragment3 extends Fragment {
             }
         }).start();
 
-
-
-
         return view;
     }
+
 }
