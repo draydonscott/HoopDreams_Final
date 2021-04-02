@@ -28,18 +28,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ShootAround extends AppCompatActivity {
-    Button buttonShotMade;
-    Button buttonShotMiss;
-    Button buttonEndSession;
-    TextView shotsMadetxt;
-    TextView shotAttemptstxt;
-    TextView shootingPercentagetxt;
-    TextView shotStreaktxt;
+public class TwentyOne extends AppCompatActivity {
+    TextView playerOneScore;
+    TextView playerTwoScore;
+    TextView timeText;
+    TextView P1;
+    TextView P2;
     Chronometer timeElapsed;
-    ShootAroundHelper helper;
-    ShotData RecentShot;
+    Button endSession;
+    TwentyOneHelper helper;
+    Button shotMade;
+    Button shotMiss;
+    Button PlayAgain;
     private boolean running = false;
+    private boolean session = false;
+    private ShotData RecentShot;
     public static final String TAG = "ShootAround";
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -60,75 +63,90 @@ public class ShootAround extends AppCompatActivity {
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_twenty_one);
+
+        final String[] date = new String[1];
+        shotMade = findViewById(R.id.buttonShotMade);
+        shotMiss = findViewById(R.id.buttonShotMiss);
+        playerOneScore = findViewById(R.id.playerOneScore);
+        playerTwoScore = findViewById(R.id.playerTwoScore);
+        P1 = findViewById(R.id.PlayerOneText);
+        P2 = findViewById(R.id.PlayerTwoText);
+        timeText = findViewById(R.id.timeText);
+        timeElapsed = findViewById(R.id.twentyOneTime);
+        endSession = findViewById(R.id.buttonEndSession);
+        PlayAgain = findViewById(R.id.buttonRestart);
+        helper = new TwentyOneHelper();
+        DataBaseHelper databasehelper = new DataBaseHelper(TwentyOne.this);
+        date[0] = helper.getDate();
+        startTimer();
+        shotMade.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                session = helper.updateStats("1");
+                Log.d(TAG,"Session complete? = "+session);
+                displayStats();
+                if (session) {
+                    timeElapsed.stop();
+                    PlayAgain.setVisibility(View.VISIBLE);
+                    Toast.makeText(TwentyOne.this,helper.calculateExperience(),Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    displayStats();
+                }
+            }
+        });
+        shotMiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                session = helper.updateStats("0");
+                displayStats();
+            }
+        });
+        endSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean success = databasehelper.addOne(helper.getTime(),helper.getShotsMade()[0],helper.getShotsTaken()[0], date[0],"21");
+                boolean temp = databasehelper.addOne(helper.getTime(),helper.getShotsMade()[1],helper.getShotsTaken()[1], date[0],"21");
+                Toast.makeText(TwentyOne.this,helper.calculateExperience(),Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+        PlayAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayAgain.setVisibility(View.GONE);
+                boolean success = databasehelper.addOne(helper.getTime(),helper.getShotsMade()[0],helper.getShotsTaken()[0], date[0],"21");
+                boolean temp = databasehelper.addOne(helper.getTime(),helper.getShotsMade()[1],helper.getShotsTaken()[1], date[0],"21");
+                helper = new TwentyOneHelper();
+                date[0] = helper.getDate();
+                running = false;
+                startTimer();
+                displayStats();
+            }
+        });
 
 
-        String date;
-        setContentView(R.layout.activity_shoot_around);
-        buttonShotMade = findViewById(R.id.buttonShotMade);
-        shotsMadetxt = findViewById(R.id.shotsMadetxt);
-        shotAttemptstxt = findViewById(R.id.shotAttempstxt);
-        buttonShotMiss = findViewById(R.id.buttonShotMiss);
-        shotStreaktxt = findViewById(R.id.shotStreaktxt);
-        timeElapsed = findViewById(R.id.timeElapsed);
-        shootingPercentagetxt = findViewById(R.id.shootingPercentagetxt);
-        buttonEndSession = findViewById(R.id.buttonEndSession);
-        helper = new ShootAroundHelper();
-        RecentShot = new ShotData();
-        DataBaseHelper databasehelper = new DataBaseHelper(ShootAround.this);
-        date = helper.getDate();
 
-        RecentShot.ShotsMadeString = ("Shots Made: 0");
-        RecentShot.ShotsAttemptedString = ("Shots Attempted: 0");
-        RecentShot.ShotStreakString = ("Shot Streak: 0");
-        RecentShot.ShootingPercentageString = ("Shooting Percentage: 0");
 
-        displayStats(RecentShot);
-        if( !running ){
+    }
+    public void displayStats(){
+        int[] PlayerScore;
+        PlayerScore = helper.displayScore();
+        P1.setText(" " +PlayerScore[0]);
+        P2.setText(" " +PlayerScore[1]);
+    }
+    private void startTimer(){
+        if (!running) {
             timeElapsed.setBase(SystemClock.elapsedRealtime());
             timeElapsed.start();
             running = true;
         }
-
-        buttonShotMade.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                RecentShot = helper.updateStats("1", shotsMadetxt, shotAttemptstxt);
-               displayStats(RecentShot);
-            }
-        });
-
-        buttonShotMiss.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                RecentShot = helper.updateStats("0", shotsMadetxt, shotAttemptstxt);
-                displayStats(RecentShot);
-            }
-        });
-
-        buttonEndSession.setOnClickListener(new View.OnClickListener(){
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v){
-                boolean success = databasehelper.addOne(helper.getTime(),helper.getShotsMade(),helper.getShotsTaken(),date,"Shoot Around");
-                Toast.makeText(ShootAround.this,helper.calculateExperience(),Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
-
-
     }
 
-    private void displayStats(ShotData shot){
-        shotsMadetxt.setText(shot.ShotsMadeString);
-        shotAttemptstxt.setText(shot.ShotsAttemptedString);
-        shootingPercentagetxt.setText(shot.ShootingPercentageString);
-        shotStreaktxt.setText(shot.ShotStreakString);
-        Log.d(TAG,"Updating Stats");
-    }
 
     public void onResume(){
         super.onResume();
@@ -158,12 +176,12 @@ public class ShootAround extends AppCompatActivity {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
-                Toast.makeText(ShootAround.this,"Connected to HoopDreamsDevice!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(TwentyOne.this,"Connected to HoopDreamsDevice!",Toast.LENGTH_SHORT).show();
                 invalidateOptionsMenu();
                 Log.d(TAG,"Connected");
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
-                Toast.makeText(ShootAround.this,"Disconnected from HoopDreamsDevice!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(TwentyOne.this,"Disconnected from HoopDreamsDevice!",Toast.LENGTH_SHORT).show();
                 invalidateOptionsMenu();
 
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
@@ -194,16 +212,15 @@ public class ShootAround extends AppCompatActivity {
 
     private void messageHandler() {
         if (receiveBuffer != null) {
-            Toast.makeText(ShootAround.this, receiveBuffer, Toast.LENGTH_SHORT).show();
+            Toast.makeText(TwentyOne.this, receiveBuffer, Toast.LENGTH_SHORT).show();
         }
         for(byte bi:receive){
             Log.d(TAG, "Byte value: "+ bi);
         }
-        RecentShot = helper.updateStats(receive[0], shotsMadetxt, shotAttemptstxt);
+        session = helper.updateStats(receive[0]);
 
-        displayStats(RecentShot);
-        Log.d(TAG,"Attempt to write char");
-        mBluetoothLeService.writeCharacteristic(helper.getFeedback());
+        displayStats();
+
     }
     private void iterateGattServices(List<BluetoothGattService> gattServices) {
         if (gattServices == null) return;

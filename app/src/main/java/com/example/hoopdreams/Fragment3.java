@@ -20,6 +20,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.hoopdreams.R;
 import com.example.hoopdreams.ui.main.ExperienceItem;
 import com.example.hoopdreams.ui.main.ExperienceTracker;
 import com.example.hoopdreams.ui.main.HistoryAdapter;
@@ -44,12 +45,12 @@ public class Fragment3 extends Fragment {
         currentLeveltxt = view.findViewById(R.id.currentLeveltxt);
         expRemtxt = view.findViewById(R.id.expRemtxt);
         expNeededtxt = view.findViewById(R.id.expNeededtxt);
-        expNeededtxt.setText("Exp to level up" + item.ExpNeeded);
-        expRemtxt.setText("Progress to next level:" + item.ExpRemaining + " %");
+        expNeededtxt.setText("Exp to level up: " + item.ExpNeeded);
+        expRemtxt.setText("Progress to next level: " + item.ExpRemaining + "%");
         currentLeveltxt.setText(item.Rank);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(view.getContext());
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
 
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerview);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         Cursor c = dataBaseHelper.getData();
@@ -59,11 +60,24 @@ public class Fragment3 extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                item = ExperienceTracker.determineBadge();
                 experienceBar.setProgress(item.ExpRemaining);
             }
         }).start();
 
+       /* getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                item = ExperienceTracker.determineBadge();
+                experienceBar.setProgress(item.ExpRemaining);
+            }
+        });*/
         return view;
+    }
+    public void onResume(){
+        super.onResume();
+        item = ExperienceTracker.determineBadge();
+        experienceBar.setProgress(item.ExpRemaining);
     }
 
 }

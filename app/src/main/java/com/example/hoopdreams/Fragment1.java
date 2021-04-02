@@ -10,11 +10,12 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 public class Fragment1 extends Fragment {
     Button buttonStart;
-
+    public MainActivity act;
     public Fragment1(){
 
     }
@@ -29,7 +30,10 @@ public class Fragment1 extends Fragment {
         buttonStart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+                act = (MainActivity) getActivity();
                 Intent in = new Intent(getActivity(), ShootAround.class);
+                in.putExtra(MainActivity.EXTRAS_DEVICE_NAME, act.getName());
+                in.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, act.getAddress());
                 startActivity(in);
             }
         });
