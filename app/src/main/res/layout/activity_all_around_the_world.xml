@@ -5,25 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".AllAroundTheWorld">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:fitsSystemWindows="true"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <TextView
         android:id="@+id/playerOneScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="190dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="24dp"
         android:text="Player 1 Score: "
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonShotMade" />
 
     <TextView
         android:id="@+id/playerTwoScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="24dp"
         android:text="Player 2 Score: "
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,9 +43,8 @@
         android:id="@+id/timeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="24dp"
         android:text="Time Elapsed:"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,59 +54,56 @@
         android:id="@+id/twentyOneTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="24dp"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/timeText"
         app:layout_constraintTop_toBottomOf="@+id/playerTwoScore" />
+
     <Button
         android:id="@+id/buttonShotMade"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="200dp"
-        android:layout_marginRight="200dp"
         android:text="Shot Made"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
 
     <Button
         android:id="@+id/buttonShotMiss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="210dp"
-        android:layout_marginLeft="210dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
         android:text="Shot Miss"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.172"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
 
     <TextView
         android:id="@+id/PlayerOneText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="190dp"
+        android:layout_marginTop="24dp"
         android:text=""
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/playerOneScore"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonShotMiss" />
 
     <TextView
         android:id="@+id/PlayerTwoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="24dp"
         android:text=""
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/playerTwoScore"
-        app:layout_constraintTop_toBottomOf="@+id/PlayerOneText" />
+        app:layout_constraintTop_toBottomOf="@+id/playerOneScore" />
 
     <Button
         android:id="@+id/buttonEndSession"
@@ -121,5 +127,15 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeText"
+        app:srcCompat="@drawable/basketball" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

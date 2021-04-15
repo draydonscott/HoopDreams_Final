@@ -2,6 +2,7 @@ package com.example.hoopdreams;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -83,6 +85,10 @@ public class TwentyOne extends AppCompatActivity {
         DataBaseHelper databasehelper = new DataBaseHelper(TwentyOne.this);
         date[0] = helper.getDate();
         startTimer();
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+        myToolbar.setTitle("Twenty-One");
+
         shotMade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

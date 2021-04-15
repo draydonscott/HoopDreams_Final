@@ -2,6 +2,8 @@ package com.example.hoopdreams;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
@@ -11,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -81,6 +84,9 @@ public class Horse extends AppCompatActivity {
         DataBaseHelper databasehelper = new DataBaseHelper(Horse.this);
         date[0] = helper.getDate();
         startTimer();
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+        myToolbar.setTitle("H.O.R.S.E");
 
         shotMade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,6 +198,8 @@ public class Horse extends AppCompatActivity {
         if (!helper.finished()) {
             session = helper.updateStats(receive[0]);
             displayStats();
+            byte[] array = {1,2,3};
+            mBluetoothLeService.writeCharacteristic(helper.getFeedback());
             if (session) {
                 timeElapsed.stop();
                 PlayAgain.setVisibility(View.VISIBLE);

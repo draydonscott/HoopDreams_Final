@@ -2,6 +2,7 @@ package com.example.hoopdreams;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -39,6 +41,7 @@ public class ShootAround extends AppCompatActivity {
     Chronometer timeElapsed;
     ShootAroundHelper helper;
     ShotData RecentShot;
+
     private boolean running = false;
     public static final String TAG = "ShootAround";
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
@@ -60,7 +63,6 @@ public class ShootAround extends AppCompatActivity {
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +82,9 @@ public class ShootAround extends AppCompatActivity {
         RecentShot = new ShotData();
         DataBaseHelper databasehelper = new DataBaseHelper(ShootAround.this);
         date = helper.getDate();
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+        myToolbar.setTitle("Shoot Around");
 
         RecentShot.ShotsMadeString = ("Shots Made: 0");
         RecentShot.ShotsAttemptedString = ("Shots Attempted: 0");

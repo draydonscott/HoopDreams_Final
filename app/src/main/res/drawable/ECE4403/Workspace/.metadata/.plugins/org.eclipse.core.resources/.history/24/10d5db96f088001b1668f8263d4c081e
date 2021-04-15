@@ -1,0 +1,89 @@
+package test.ds;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class Course {
+    final int SECTIONS, STUDENTS_PER_SECTION;
+    final String COURSE_NUM;
+    int secCount = 1;
+    ArrayList<String> preReq = new ArrayList<String>();
+    Student[] students;
+    ArrayList<Student[]> classList = new ArrayList<Student[]>();
+    ArrayList<Student> waitList = new ArrayList<Student>();
+
+    public Course(String courseNum, int sections, int studentsPerSection) {
+        this.SECTIONS = sections;
+        this.STUDENTS_PER_SECTION = studentsPerSection;
+        this.COURSE_NUM = courseNum;
+        students = new Student[studentsPerSection];
+        classList.add(students);
+    }
+
+    public void enrollStudent(Student student) {
+        boolean added = false;
+        if (qualify(student)) {
+            if (secCount < SECTIONS) {
+                for (int i = 0; i < STUDENTS_PER_SECTION; i++) {
+                    if (classList.get(secCount - 1)[i] == null) {
+                        classList.get(secCount - 1)[i] = student;
+                        added = true;
+                        break;
+                    }
+                }
+                if (added) {
+                    return;
+                } else {
+                    Student[] t = new Student[STUDENTS_PER_SECTION];
+                    t[0] = student;
+                    classList.add(t);
+                    secCount++;
+                }
+            }
+            else{
+                waitList.add(student);
+            }
+        }
+    }
+
+    public void addPreReq(String courseNum) {
+        preReq.add(courseNum);
+    }
+
+    public boolean qualify(Student student) {
+        for (String s : preReq) {
+            boolean found = false;
+            for (int j = 0; j < student.grades.size(); j++) {
+                if (!found) {
+                    if (s.equalsIgnoreCase(student.grades.get(j).courseNum)) {
+                        found = true;
+                        if (!(student.grades.get(j).grade <= 'C')) {
+                            return false;
+                        }
+                    }
+                }
+            }
+                if(!found){
+                    return false;
+                }
+            }
+        return true;
+    }
+    public int totalStudents(){
+        int total = 0;
+        for(Student[] s : classList){
+            total += s.length;
+        }
+        return total;
+    }
+    
+    public void displayEnrollments() {
+    	System.out.println("\nCurrent Number of Sections: " +SECTIONS +" Current Number of Students: " +classList.size() + ", waitlisted: " + waitList.size());
+    	System.out.println(classList.get(0)[0]);
+    }
+    
+    @Override
+    public String toString(){
+        return "\n" + COURSE_NUM + ": capacity " + SECTIONS + " Sections, " + STUDENTS_PER_SECTION +" students/section";
+    }
+}

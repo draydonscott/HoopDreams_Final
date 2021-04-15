@@ -1,0 +1,28 @@
+package main;
+
+public class AbsenceType {
+	private String absenseType;
+	private Teacher teacher
+	
+	public AbsenceType(Teacher teacher) {
+		this.teacher = teacher;
+	}
+	
+	public String getAbsenceType() {
+		return this.absenseType;
+	}
+	
+	public void setAbsenseType(char type) {
+		if(type.equalsIgnoreCase('w')) {
+			this.absenseType = "Work Related";
+		}
+		else {
+			this.absenseType = "Personal";
+		}
+	}
+	
+	public void workRelated(Teacher teacher) {
+		//this
+	}
+	
+}

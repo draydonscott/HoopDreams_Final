@@ -25,6 +25,7 @@ public class HorseHelper {
     private Random rand;
     private int bound;
     boolean flag = false;
+    private byte[] feedback = {5,1,0,0,0};
 
 
 
@@ -57,22 +58,52 @@ public class HorseHelper {
             recreateShot(shot);
             New = 1;
         }
-        if(hasLost(PlayerScore.get(0))){return true;}
-        else if (hasLost(PlayerScore.get(1))){return true;}
+        if(hasLost(PlayerScore.get(0))){
+           feedback[0] = 5;
+           feedback [1] = 19;
+           feedback [2] = 0;
+           feedback [3] = 0;
+           feedback[4] = 0;
+            return true;
+        }
+        else if (hasLost(PlayerScore.get(1))){
+            feedback[0] = 5;
+           feedback [1] = 18;
+           feedback [2] = 0;
+           feedback [3] = 0;
+           feedback[4] = 0;
+            return true;
+        }
         else return false;
     }
-
+    public byte[] getFeedback(){return feedback;}
     public void newShot(byte shot){
         ShotsTaken[PlayerTurn-1]++;
         if(shot==1){
             ShotsMade[PlayerTurn-1]++;
             ShotStreak[PlayerTurn-1]++;
+           feedback[0] = 5;
+            feedback[2] = 0;
+            feedback[3] = 0;
+            feedback[4] = 2;
+            if(PlayerTurn == 1){
+                feedback[1] = 3;
+            }
+            else {feedback[1] = 2; }
             updatePlayerTurn();
             System.out.println("Nice Shot! Player " + PlayerTurn + " recreate that Shot!");
         }
 
         else{
             ShotStreak[PlayerTurn-1] = 0;
+            feedback[0] = 5;
+            feedback[2] = 0;
+            feedback[3] = 0;
+            feedback[4] = 1;
+            if(PlayerTurn == 1){
+                feedback[1] = 5; // miss, player 2 new shot
+            }
+            else {feedback[1] = 4; } //miss, player 1 new shot
             updatePlayerTurn();
             System.out.println("Nice Try! Player "+ PlayerTurn +" your turn to try a new shot!");
         }
@@ -86,12 +117,27 @@ public class HorseHelper {
         if(shot==1){
             ShotsMade[PlayerTurn-1]++;
             ShotStreak[PlayerTurn-1]++;
+
+            feedback[0] = 5; // folder horse
+            feedback[2] = 5; //horse folder
+            feedback[4] = 2;
+            if(PlayerTurn == 1){
+                feedback[1] = 7; // recreate make, player 2 new shot
+            }
+            else {feedback[1] = 6; } //recreate make, player 1 new shot
             updatePlayerTurn();
             System.out.println("Nice Shot! Player " + PlayerTurn + " attempt a new shot!");
 
         }
         else{
             ShotStreak[PlayerTurn-1] = 0;
+            feedback[0] = 5; // folder horse
+            feedback[2] = 5; //horse folder
+            feedback[4] = 1;
+            if(PlayerTurn == 1){
+                feedback[1] = 9; // recreate miss, player 2 new shot
+            }
+            else {feedback[1] = 8; } //recreate miss, player 1 new shot
             updateScore(PlayerTurn);
             if (hasLost(PlayerScore.get(PlayerTurn-1))){
                 gameOver();
@@ -168,18 +214,34 @@ public class HorseHelper {
         switch(temp){
             case "":
                 PlayerScore.set(turn-1, "H");
+                if(PlayerTurn == 1){
+                   feedback[3] = 10; // p1 H
+                }
+                else {feedback[3] = 14; } //p2 H
                 break;
 
             case "H":
                 PlayerScore.set(turn-1, "HO");
+                if(PlayerTurn == 1){
+                    feedback[3] = 11; // p1 H
+                }
+                else {feedback[3] = 15; } //p2 H
                 break;
 
             case "HO":
                 PlayerScore.set(turn-1, "HOR");
+                if(PlayerTurn == 1){
+                    feedback[3] = 12; // p1 H
+                }
+                else {feedback[3] = 16; } //p2 H
                 break;
 
             case "HOR":
                 PlayerScore.set(turn-1, "HORS");
+                if(PlayerTurn == 1){
+                    feedback[3] = 13; // p1 H
+                }
+                else {feedback[3] = 17; } //p2 H
                 break;
 
             case "HORS":
